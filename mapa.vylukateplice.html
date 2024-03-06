@@ -1,0 +1,113 @@
+<body>
+
+      
+  
+    <!-- Sekce pro mapu -->
+    <div id="mapid" style="width: 600px; height: 400px;"></div>
+  
+    <!-- Skripty pro Leaflet mapu -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+      var map = L.map('mapid').setView([50.6440611, 13.8273617], 15); // Nastavení středu mapy a úrovně přiblížení
+  
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: 19,
+          attribution: '© OpenStreetMap contributors'
+      }).addTo(map);
+  
+      // Příklad přidání čáry pro trasu autobusu
+      var busRoute_nova = L.polyline([
+          [50.6457000, 13.8285858], // Koordináty první zastávky
+          [50.6444347, 13.8303775]  // Koordináty druhé zastávky
+          // ... další koordináty pro celou trasu
+      ], {
+          color: 'purple',      // Barva čáry
+          weight: 6,          // Šířka čáry
+          opacity: 0.7,       // Průhlednost čáry
+          lineJoin: 'round'   // Stylování spojů čar
+      }).bindTooltip("Objízdná trasa pro ...", {permanent: false, direction: 'auto'}).addTo(map);
+
+      var busRoute1 = L.polyline([
+          [50.6458228, 13.8288006], // Koordináty první zastávky
+          [50.6445506, 13.8254961],
+          [50.6436794, 13.8222989],
+          [50.6423189, 13.8228139],
+          [50.6423525, 13.8258072],
+          [50.6415158, 13.8279314],
+          [50.6440403, 13.8299483],
+          [50.6450675, 13.8314719],
+          [50.6462511, 13.8299056],
+          [50.6458228, 13.8288006]
+          // Koordináty druhé zastávky
+          // ... další koordináty pro celou trasu
+      ], {
+          color: 'blue',      // Barva čáry
+          weight: 6,          // Šířka čáry
+          opacity: 0.7,       // Průhlednost čáry
+          lineJoin: 'round'   // Stylování spojů čar
+      }).bindTooltip("Vozy touto trasou jedou normálně.", {permanent: false, direction: 'auto'}).addTo(map);
+  
+// Uzavřený úsek z bodu 5 do bodu 14
+var closedRoute1 = L.polyline([
+    [50.6424650, 13.8259253], // Bod 5
+    [50.6449808, 13.8279289]  // Bod 14
+], {
+    color: 'red',
+    weight: 6,
+    opacity: 0.7,
+    lineJoin: 'round'
+}).bindTooltip("Vozy touto trasou nejedou.", {permanent: false, direction: 'auto'}).addTo(map);
+
+// Uzavřený úsek z bodu 14 do bodu 12
+var closedRoute2 = L.polyline([
+    [50.6449808, 13.8279289], // Bod 14
+    [50.6452781, 13.8273842]  // Bod 12
+], {
+    color: 'red',
+    weight: 6,
+    opacity: 0.7,
+    lineJoin: 'round'
+}).bindTooltip("Vozy touto trasou nejedou.", {permanent: false, direction: 'auto'}).addTo(map);
+
+// Uzavřený úsek z bodu 14 do bodu 13
+var closedRoute3 = L.polyline([
+    [50.6449808, 13.8279289], // Bod 14
+    [50.6440853, 13.8299283]  // Bod 13
+], {
+    color: 'red',
+    weight: 6,
+    opacity: 0.7,
+    lineJoin: 'round'
+}).bindTooltip("Vozy touto trasou nejedou.", {permanent: false, direction: 'auto'}).addTo(map);
+
+// Volitelný úsek z bodu 14 do bodu 10, pokud je třeba jej zobrazit
+var optionalRoute = L.polyline([
+    [50.6449808, 13.8279289], // Bod 14
+    [50.6457000, 13.828585]   // Bod 10
+], {
+    color: 'red', // Volitelně jiná barva, pokud tento úsek není uzavřen
+    weight: 6,
+    opacity: 0.7,
+    lineJoin: 'round'
+}).bindTooltip("Vozy touto trasou nejedou.", {permanent: false, direction: 'auto'}).addTo(map);
+
+// Informace o dopadu na linky
+// Tento array zastávek doplňte podle skutečných dat a poloh zastávek
+var affectedStops = [
+    // Příklad zastávky
+    {coords: [50.6421475, 13.8265139], lines: "(480), 483, (491), 494", info: "Benešovo náměstí - výstup"},
+    {coords: [50.6421153, 13.8266481], lines: "482, 484, 804", info: "Benešovo náměstí"},
+    {coords: [50.6459808, 13.8289356], lines: "<i>480</i>, 481, <i>482, 483 ↗, 484</i>, 488, 490, 491, 493, 494 ↗, 495, 502, 503, 504, 802, 803, 804, 398", info: "Hlavní nádraží"},
+    {coords: [50.6435050, 13.8294706], lines: "<i>(480) ↙</i>, 481, 482, <i>483 ↙, (484) ↙, (491) ↙, 494 ↙</i>", info: "Hotel de Saxe"},
+    {coords: [50.6454697, 13.8319150], lines: "<i>(480) ↙</i>, <i>483 ↙, (484) ↙</i>, 490,<i> (491) ↙, 494 ↙</i>", info: ""}
+    // Přidat další zastávky
+];
+
+affectedStops.forEach(function(stop) {
+    L.marker(stop.coords).addTo(map)
+        .bindTooltip("<b>Linky: " + stop.lines + "</b><br>" + stop.info, {permanent: false, direction: 'top'});
+});
+    </script>
+  </body>
+  
